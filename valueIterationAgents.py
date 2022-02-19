@@ -47,6 +47,18 @@ class ValueIterationAgent(ValueEstimationAgent):
 
         # Write value iteration code here
         "*** YOUR CODE HERE ***"
+        for i in range(self.iterations): # every k
+            valoresAtualizados = self.values.copy()  # to use batch-version of MDP , hard copy the values
+
+            for estado in self.mdp.getStates():
+
+                if not self.mdp.isTerminal(estado):
+
+                    possiveisAcoes = self.mdp.getPossibleActions(estado)
+                    otimo = max([self.getQValue(estado,acao) for acao in possiveisAcoes])
+                    valoresAtualizados[estado] = otimo
+
+            self.values = valoresAtualizados
 
     def getValue(self, state):
         """
@@ -60,7 +72,13 @@ class ValueIterationAgent(ValueEstimationAgent):
           value function stored in self.values.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        qval = 0
+
+        for s_prime, T in self.mdp.getTransitionStatesAndProbs(state, action):
+            qval += T * ( self.mdp.getReward(state, action, s_prime) + self.discount*self.getValue(s_prime) )
+
+        return qval
+
 
     def computeActionFromValues(self, state):
         """
@@ -72,7 +90,12 @@ class ValueIterationAgent(ValueEstimationAgent):
           terminal state, you should return None.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        policy = util.Counter()
+        #Falta tratar empates entre Q-valores
+        for action in self.mdp.getPossibleActions(state):
+            policy[action] = self.getQValue(state, action)
+
+        return policy.argMax()
 
     def getPolicy(self, state):
         return self.computeActionFromValues(state)
