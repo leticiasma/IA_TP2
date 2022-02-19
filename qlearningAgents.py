@@ -51,8 +51,7 @@ class QLearningAgent(ReinforcementAgent):
           or the Q node value otherwise
         """
         "*** YOUR CODE HERE ***"
-        return self.qValues[(state,action)]
-
+        return self.qValues[(state, action)]
 
     def computeValueFromQValues(self, state):
         """
@@ -62,6 +61,9 @@ class QLearningAgent(ReinforcementAgent):
           terminal state, you should return a value of 0.0.
         """
         "*** YOUR CODE HERE ***"
+
+        #Retornar o maior QValue para esse estado
+
         Qval = float('-inf')
 
         for action in self.getLegalActions(state):
@@ -78,6 +80,9 @@ class QLearningAgent(ReinforcementAgent):
           you should return None.
         """
         "*** YOUR CODE HERE ***"
+
+        # retornar a politica/melhor acao
+
         if len(self.getLegalActions(state)) is 0:
             return None
 
@@ -105,6 +110,9 @@ class QLearningAgent(ReinforcementAgent):
         legalActions = self.getLegalActions(state)
         action = None
         "*** YOUR CODE HERE ***"
+        if len(legalActions) == 0:
+            return None
+            
         if util.flipCoin(self.epsilon):
             action = random.choice(legalActions)
         else:

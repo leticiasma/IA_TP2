@@ -91,11 +91,15 @@ class ValueIterationAgent(ValueEstimationAgent):
         """
         "*** YOUR CODE HERE ***"
         policy = util.Counter()
-        #Falta tratar empates entre Q-valores
-        for action in self.mdp.getPossibleActions(state):
-            policy[action] = self.getQValue(state, action)
 
-        return policy.argMax()
+        if not self.mdp.isTerminal(state):
+            #Falta tratar empates entre Q-valores
+            for action in self.mdp.getPossibleActions(state):
+                policy[action] = self.getQValue(state, action)
+
+            return policy.argMax()
+        else:
+            return None
 
     def getPolicy(self, state):
         return self.computeActionFromValues(state)
